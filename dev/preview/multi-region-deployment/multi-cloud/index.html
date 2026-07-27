@@ -6,15 +6,15 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="How to monitor DocumentDB clusters using the operator-managed OpenTelemetry Collector sidecar.">
+        <meta name="description" content="Understand what changes when you extend a multi-region DocumentDB deployment across AKS, GKE, and EKS instead of staying within one cloud provider.">
       
       
       
       
-        <link rel="prev" href="../../advanced-configuration/">
+        <link rel="prev" href="../failover-procedures/">
       
       
-        <link rel="next" href="../metrics/">
+        <link rel="next" href="../../faq/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Monitoring Overview - DocumentDB-Kubernetes-Operator</title>
+        <title>Multi-cloud differences - DocumentDB-Kubernetes-Operator</title>
       
     
     
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#monitoring-overview" class="md-skip">
+        <a href="#overview" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Monitoring Overview
+              Multi-cloud differences
             
           </span>
         </div>
@@ -1011,8 +1011,6 @@
                 
   
   
-    
-  
   
   
     
@@ -1027,11 +1025,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_8" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_8" >
         
           
           <label class="md-nav__link" for="__nav_1_8" id="__nav_1_8_label" tabindex="">
@@ -1045,7 +1043,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_8">
             <span class="md-nav__icon md-icon"></span>
             Monitoring
@@ -1056,30 +1054,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Overview
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../monitoring/overview/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1088,122 +1066,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-the-operator-owns" class="md-nav__link">
-    <span class="md-ellipsis">
-      What the operator owns
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      Architecture
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#enable-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      Enable monitoring
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Enable monitoring">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#otlp-push" class="md-nav__link">
-    <span class="md-ellipsis">
-      OTLP push
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#prometheus-pull" class="md-nav__link">
-    <span class="md-ellipsis">
-      Prometheus pull
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#both-exporters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Both exporters
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pod-and-container-resource-metrics" class="md-nav__link">
-    <span class="md-ellipsis">
-      Pod and container resource metrics
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verify-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      Verify monitoring
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#telemetry-playground" class="md-nav__link">
-    <span class="md-ellipsis">
-      Telemetry playground
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      Next steps
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1216,7 +1078,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../metrics/" class="md-nav__link">
+      <a href="../../monitoring/metrics/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1242,6 +1104,8 @@
                 
   
   
+    
+  
   
   
     
@@ -1256,11 +1120,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_9" checked>
         
           
           <label class="md-nav__link" for="__nav_1_9" id="__nav_1_9_label" tabindex="">
@@ -1274,7 +1138,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_9_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_9_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_9">
             <span class="md-nav__icon md-icon"></span>
             Multi-region deployment
@@ -1288,7 +1152,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../multi-region-deployment/overview/" class="md-nav__link">
+      <a href="../overview/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1309,7 +1173,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../multi-region-deployment/setup/" class="md-nav__link">
+      <a href="../setup/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1330,7 +1194,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../multi-region-deployment/failover-procedures/" class="md-nav__link">
+      <a href="../failover-procedures/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1348,10 +1212,28 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../multi-region-deployment/multi-cloud/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Multi-cloud differences
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1360,6 +1242,120 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changes-in-multi-cloud-deployments" class="md-nav__link">
+    <span class="md-ellipsis">
+      What changes in multi-cloud deployments
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What changes in multi-cloud deployments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provider-deployment-guides-still-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provider deployment guides still apply
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networking-becomes-the-primary-design-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Networking becomes the primary design decision
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-discovery-needs-a-cross-provider-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Service discovery needs a cross-provider plan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identity-and-permissions-are-provider-specific" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identity and permissions are provider-specific
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-and-client-routing-need-an-external-source-of-truth" class="md-nav__link">
+    <span class="md-ellipsis">
+      DNS and client routing need an external source of truth
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observability-must-include-the-network-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Observability must include the network layer
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-the-playground" class="md-nav__link">
+    <span class="md-ellipsis">
+      When to use the playground
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next steps
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1511,8 +1507,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1521,55 +1515,73 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-the-operator-owns" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
-      What the operator owns
+      Overview
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
+  <a href="#what-changes-in-multi-cloud-deployments" class="md-nav__link">
     <span class="md-ellipsis">
-      Architecture
+      What changes in multi-cloud deployments
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#enable-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      Enable monitoring
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Enable monitoring">
+    <nav class="md-nav" aria-label="What changes in multi-cloud deployments">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#otlp-push" class="md-nav__link">
+  <a href="#provider-deployment-guides-still-apply" class="md-nav__link">
     <span class="md-ellipsis">
-      OTLP push
+      Provider deployment guides still apply
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#prometheus-pull" class="md-nav__link">
+  <a href="#networking-becomes-the-primary-design-decision" class="md-nav__link">
     <span class="md-ellipsis">
-      Prometheus pull
+      Networking becomes the primary design decision
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#both-exporters" class="md-nav__link">
+  <a href="#service-discovery-needs-a-cross-provider-plan" class="md-nav__link">
     <span class="md-ellipsis">
-      Both exporters
+      Service discovery needs a cross-provider plan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identity-and-permissions-are-provider-specific" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identity and permissions are provider-specific
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-and-client-routing-need-an-external-source-of-truth" class="md-nav__link">
+    <span class="md-ellipsis">
+      DNS and client routing need an external source of truth
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observability-must-include-the-network-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Observability must include the network layer
     </span>
   </a>
   
@@ -1581,27 +1593,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pod-and-container-resource-metrics" class="md-nav__link">
+  <a href="#when-to-use-the-playground" class="md-nav__link">
     <span class="md-ellipsis">
-      Pod and container resource metrics
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verify-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      Verify monitoring
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#telemetry-playground" class="md-nav__link">
-    <span class="md-ellipsis">
-      Telemetry playground
+      When to use the playground
     </span>
   </a>
   
@@ -1634,159 +1628,147 @@
   
 
 
-<h1 id="monitoring-overview">Monitoring Overview<a class="headerlink" href="#monitoring-overview" title="Permanent link">&para;</a></h1>
-<p>DocumentDB monitoring is built around an opt-in OpenTelemetry Collector sidecar that the operator injects into each DocumentDB pod. The sidecar collects DocumentDB-owned, pod-local metrics and can export them to an OTLP backend, expose them for Prometheus scraping, or do both.</p>
-<p>Pod, container, and node resource metrics are Kubernetes platform metrics, not DocumentDB-specific metrics. Use your platform collector for those signals. If your cluster does not already collect them, the telemetry playground includes a reference kubeletstats DaemonSet you can deploy as an example.</p>
-<h2 id="what-the-operator-owns">What the operator owns<a class="headerlink" href="#what-the-operator-owns" title="Permanent link">&para;</a></h2>
-<p>The operator-owned monitoring surface is intentionally narrow:</p>
-<table>
-<thead>
-<tr>
-<th>Area</th>
-<th>Responsibility</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Sidecar injection</td>
-<td><code>spec.monitoring.enabled: true</code> adds one OTel Collector sidecar to each DocumentDB pod.</td>
-</tr>
-<tr>
-<td>Exporter routing</td>
-<td><code>spec.monitoring.exporter</code> chooses OTLP push, Prometheus pull, or both.</td>
-</tr>
-<tr>
-<td>DocumentDB-specific metrics</td>
-<td>The sidecar emits pod-local metrics such as PostgreSQL health. Gateway application metrics will be documented when a public gateway image emits them.</td>
-</tr>
-</tbody>
-</table>
-<p>The operator chart does not install a node-level collector, a Prometheus stack, Grafana, or vendor dashboards. Those are downstream platform choices.</p>
-<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-    subgraph pod["DocumentDB pod"]
-        pg["postgres"]
-        gateway["documentdb-gateway"]
-        sidecar["OTel Collector sidecar"]
-        pg --&gt; sidecar
-        gateway -- "local OTLP when supported by the gateway image" --&gt; sidecar
-    end
+  <h1>Multi-cloud differences</h1>
 
-    otlp["OTLP backend / Collector"]
-    prometheus["Prometheus"]
-
-    sidecar -- "OTLP push" --&gt; otlp
-    prometheus -- "Prometheus scrape" --&gt; sidecar</code></pre>
-<p>The sidecar pipeline is an operator implementation detail. Configure the exporter you want; the operator renders the collector configuration needed for that backend.</p>
-<h2 id="enable-monitoring">Enable monitoring<a class="headerlink" href="#enable-monitoring" title="Permanent link">&para;</a></h2>
-<p>Set <code>spec.monitoring.enabled: true</code> and configure at least one exporter.</p>
-<h3 id="otlp-push">OTLP push<a class="headerlink" href="#otlp-push" title="Permanent link">&para;</a></h3>
-<p>Use OTLP when your metrics backend or central in-cluster Collector accepts OTLP/gRPC.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentdb.io/preview</span>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>A multi-cloud DocumentDB deployment is a multi-region deployment where the
+participating Kubernetes clusters run in different cloud providers. The
+<a href="../overview/#primary-replica-model">primary-replica model</a>, replication
+configuration, and failover behavior are the same as any multi-region
+deployment.</p>
+<p>Use the multi-region docs as the baseline for topology, setup, and failover:</p>
+<ul>
+<li><a href="../overview/">Multi-region deployment overview</a></li>
+<li><a href="../setup/">Multi-region setup guide</a></li>
+<li><a href="../failover-procedures/">Multi-region failover procedures</a></li>
+</ul>
+<p>This page covers only the differences that matter when those Kubernetes clusters
+span AKS, GKE, EKS, or another provider mix.</p>
+<h2 id="what-changes-in-multi-cloud-deployments">What changes in multi-cloud deployments<a class="headerlink" href="#what-changes-in-multi-cloud-deployments" title="Permanent link">&para;</a></h2>
+<h3 id="provider-deployment-guides-still-apply">Provider deployment guides still apply<a class="headerlink" href="#provider-deployment-guides-still-apply" title="Permanent link">&para;</a></h3>
+<p>Start with the single-provider deployment guides when you need provider-specific
+Kubernetes prerequisites, storage defaults, authentication setup, and service
+exposure behavior. The multi-cloud layer changes how the Kubernetes clusters
+connect to each other; it doesn't replace the provider-specific setup work for
+each member Kubernetes cluster.</p>
+<ul>
+<li><a href="../../getting-started/deploy-on-aks/">Deploy on AKS</a></li>
+<li><a href="../../getting-started/deploy-on-eks/">Deploy on EKS</a></li>
+<li><a href="../../getting-started/deploy-on-gke/">Deploy on GKE</a></li>
+</ul>
+<p>Use the <code>clusterList[].environment</code> variables to indicate which Kubernetes clusters
+use certain cloud providers for automatic additions from those guides.</p>
+<div class="highlight"><span class="filename">documentdb.yaml</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentdb.io/preview</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DocumentDB</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">metadata</span><span class="p">:</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-cluster</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">spec</span><span class="p">:</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">monitoring</span><span class="p">:</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">exporter</span><span class="p">:</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="nt">otlp</span><span class="p">:</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">otel-collector.observability.svc.cluster.local:4317</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentdb-preview</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentdb-preview-ns</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">clusterReplication</span><span class="p">:</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure-cluster</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">clusterList</span><span class="p">:</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-cluster</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eks</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure-cluster</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aks</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcp-cluster</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gke</span>
 </code></pre></div>
-<h3 id="prometheus-pull">Prometheus pull<a class="headerlink" href="#prometheus-pull" title="Permanent link">&para;</a></h3>
-<p>Use the Prometheus exporter when your Prometheus server scrapes pod endpoints. Port <code>9188</code> avoids CloudNativePG's instance-manager metrics port (<code>9187</code>).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentdb.io/preview</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DocumentDB</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">metadata</span><span class="p">:</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-cluster</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nt">spec</span><span class="p">:</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">monitoring</span><span class="p">:</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nt">exporter</span><span class="p">:</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">      </span><span class="nt">prometheus</span><span class="p">:</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9188</span>
-</code></pre></div>
-<p>The operator adds Prometheus scrape annotations to DocumentDB pods when the Prometheus exporter is configured. A pod-annotation scrape job can discover the sidecars:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentdb-otel-sidecar</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">kubernetes_sd_configs</span><span class="p">:</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pod</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">relabel_configs</span><span class="p">:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">__meta_kubernetes_pod_annotation_prometheus_io_scrape</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keep</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">      </span><span class="nt">regex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">__address__</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">__meta_kubernetes_pod_annotation_prometheus_io_port</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">replace</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">      </span><span class="nt">regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">([^:]+)(?::\d+)?;(\d+)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="nt">replacement</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$1:$2</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="nt">target_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__address__</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">__meta_kubernetes_pod_annotation_prometheus_io_path</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">      </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">replace</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">      </span><span class="nt">target_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__metrics_path__</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">      </span><span class="nt">regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(.+)</span>
-</code></pre></div>
-<p>Prometheus Operator users can use an equivalent <code>PodMonitor</code> that selects the annotated DocumentDB pods.</p>
-<h3 id="both-exporters">Both exporters<a class="headerlink" href="#both-exporters" title="Permanent link">&para;</a></h3>
-<p>Configure both exporters when you want Prometheus scraping and OTLP push from the same sidecar:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentdb.io/preview</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DocumentDB</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">metadata</span><span class="p">:</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-cluster</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">spec</span><span class="p">:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">monitoring</span><span class="p">:</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">exporter</span><span class="p">:</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">      </span><span class="nt">otlp</span><span class="p">:</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">        </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">otel-collector.observability.svc.cluster.local:4317</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">      </span><span class="nt">prometheus</span><span class="p">:</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9188</span>
-</code></pre></div>
-<h2 id="pod-and-container-resource-metrics">Pod and container resource metrics<a class="headerlink" href="#pod-and-container-resource-metrics" title="Permanent link">&para;</a></h2>
-<p>CPU, memory, network, filesystem, and node metrics are collected from the Kubernetes platform, usually from kubelet, cAdvisor, a managed cloud agent, kube-prometheus-stack, or an OTel Collector DaemonSet. They are useful for operating DocumentDB, but they are not produced by the DocumentDB operator.</p>
-<p>If your platform already collects these metrics, filter to DocumentDB pods or containers in that backend. For example, Prometheus metrics produced by an OTel kubeletstats collector commonly use filters like:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">k8s_container_name</span><span class="err">=~</span><span class="p">&quot;</span><span class="s">postgres|documentdb-gateway</span><span class="p">&quot;</span>
-</code></pre></div>
-<p>If your cluster does not already collect kubelet metrics, see the reference example in <a href="https://github.com/documentdb/documentdb-kubernetes-operator/tree/main/documentdb-playground/telemetry/container-metrics"><code>documentdb-playground/telemetry/container-metrics/</code></a>. Deploying a kubeletstats DaemonSet is a cluster-admin decision because it needs node-level kubelet access and sees pods across namespaces.</p>
-<h2 id="verify-monitoring">Verify monitoring<a class="headerlink" href="#verify-monitoring" title="Permanent link">&para;</a></h2>
-<p>First confirm that the DocumentDB pods include the sidecar:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">NS</span><span class="o">=</span>my-namespace
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">CLUSTER</span><span class="o">=</span>my-cluster
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NS</span><span class="s2">&quot;</span><span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;cnpg.io/cluster=</span><span class="nv">$CLUSTER</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NS</span><span class="s2">&quot;</span><span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;cnpg.io/cluster=</span><span class="nv">$CLUSTER</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{range .items[*]}{.metadata.name}{&quot;: &quot;}{range .spec.containers[*]}{.name}{&quot;,&quot;}{end}{&quot;\n&quot;}{end}&#39;</span>
-</code></pre></div>
-<p>Then verify the backend you configured:</p>
-<table>
-<thead>
-<tr>
-<th>Exporter</th>
-<th>Verification</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>OTLP</td>
-<td>Check your central Collector or backend for the <code>documentdb.postgres.up</code> metric and the <code>documentdb.cluster</code> resource attribute.</td>
-</tr>
-<tr>
-<td>Prometheus</td>
-<td>Query <code>documentdb_postgres_up</code> after port-forwarding Prometheus or opening your Prometheus UI.</td>
-</tr>
-</tbody>
-</table>
-<p>If metrics are missing, check:</p>
+<h3 id="networking-becomes-the-primary-design-decision">Networking becomes the primary design decision<a class="headerlink" href="#networking-becomes-the-primary-design-decision" title="Permanent link">&para;</a></h3>
+<p>In a single cloud provider, you can usually rely on a cohesive private
+networking model such as VNet peering, VPC peering, private DNS, and provider
+load balancers. In a multi-cloud deployment, those assumptions don't hold across
+every Kubernetes cluster. You need an explicit cross-cloud networking design for
+replication traffic, service discovery, and operational access.</p>
+<p>Common approaches include:</p>
 <ul>
-<li><code>spec.monitoring.enabled: true</code> is set on the <code>DocumentDB</code> resource.</li>
-<li>At least one exporter is configured under <code>spec.monitoring.exporter</code>.</li>
-<li>The pods include an <code>otel-collector</code> container.</li>
-<li>The sidecar logs do not show exporter connection errors: <code>kubectl logs &lt;pod&gt; -c otel-collector -n "$NS"</code>.</li>
+<li><strong>Cross Kubernetes cluster mesh:</strong> Use east-west gateways, shared trust,
+  remote secrets, and mesh service discovery to route replication traffic across
+  providers. Tools like Istio can manage this automatically.</li>
+<li><strong>Site-to-site VPNs:</strong> Connect cloud networks with VPN tunnels when your
+  organization needs private IP connectivity but doesn't have one native
+  provider network that spans every Kubernetes cluster.</li>
+<li><strong>Cloud interconnect or private WAN:</strong> Use dedicated connectivity when latency,
+  bandwidth, or compliance requirements exceed what internet-routed VPN or mesh
+  gateways can provide.</li>
+<li><strong>Public load balancers with strict controls:</strong> Use provider load balancers
+  only when private connectivity isn't available, and pair them with TLS,
+  firewall restrictions, and tightly scoped access.</li>
 </ul>
-<h2 id="telemetry-playground">Telemetry playground<a class="headerlink" href="#telemetry-playground" title="Permanent link">&para;</a></h2>
-<p>The <a href="https://github.com/documentdb/documentdb-kubernetes-operator/tree/main/documentdb-playground/telemetry/local"><code>documentdb-playground/telemetry/local/</code></a> directory contains a self-contained Kind-based playground. It installs the operator from the local working tree, deploys a DocumentDB cluster with monitoring enabled, applies the reference container-metrics DaemonSet, and provisions Prometheus plus Grafana as one demo stack.</p>
-<p>Use the playground when you want a complete local example. Use your platform's existing observability stack for production clusters.</p>
+<p>The playground uses Istio as the reference approach because it works easily across
+AKS, GKE, and EKS without requiring one provider's private networking model to cover
+all member Kubernetes clusters. For implementation details, see the
+<a href="https://github.com/documentdb/documentdb-kubernetes-operator/tree/main/documentdb-playground/multi-cloud-deployment">multi-cloud deployment playground</a>
+and the upstream <a href="https://istio.io/latest/docs/setup/install/multicluster/multi-primary_multi-network/">Istio multi-primary multi-network documentation</a>.
+For high throughput production situations, consult with networking professionals
+to select the most performant tools for your needs.</p>
+<p>For operator-level networking configuration, including the
+<code>crossCloudNetworkingStrategy</code> field, see the
+<a href="../setup/#networking-management">multi-region setup guide</a>.</p>
+<h3 id="service-discovery-needs-a-cross-provider-plan">Service discovery needs a cross-provider plan<a class="headerlink" href="#service-discovery-needs-a-cross-provider-plan" title="Permanent link">&para;</a></h3>
+<p>DocumentDB replication depends on
+<a href="../overview/#dns-and-service-discovery">stable service names and reachable endpoints</a>.
+Within one provider, private DNS and network peering are often enough. Across
+providers, decide how each Kubernetes cluster resolves and reaches the services
+in the other Kubernetes clusters.</p>
+<p>If you use Istio, remote secrets and east-west gateways provide the discovery
+and routing path. If you use site-to-site VPNs or private WAN connectivity, make
+sure DNS zones, conditional forwarding, firewall rules, and route tables are
+configured consistently across providers.</p>
+<h3 id="identity-and-permissions-are-provider-specific">Identity and permissions are provider-specific<a class="headerlink" href="#identity-and-permissions-are-provider-specific" title="Permanent link">&para;</a></h3>
+<p>Multi-region deployments within one provider often share one IAM (Identity and
+Access Management) model. In a multi-cloud deployment, each provider has its own
+identity system, permission model, audit trail, and credential refresh behavior.</p>
+<p>Plan for:</p>
+<ul>
+<li>Separate cloud identities for AKS, GKE, and EKS operations.</li>
+<li>Kubernetes RBAC on every member Kubernetes cluster.</li>
+<li>Fleet or GitOps permissions for resource propagation.</li>
+<li>Provider-specific permissions for load balancers, disks, DNS, and network
+  changes.</li>
+</ul>
+<p>The playground README lists the required provider tools and permissions in
+<a href="https://github.com/documentdb/documentdb-kubernetes-operator/blob/main/documentdb-playground/multi-cloud-deployment/README.md#prerequisites">Prerequisites</a>.</p>
+<h3 id="dns-and-client-routing-need-an-external-source-of-truth">DNS and client routing need an external source of truth<a class="headerlink" href="#dns-and-client-routing-need-an-external-source-of-truth" title="Permanent link">&para;</a></h3>
+<p>After failover, clients must reach the promoted primary DocumentDB cluster. In a
+single cloud provider, your DNS and traffic-routing options may be standardized.
+Across providers, choose a source of truth that all clients can use, such as a
+shared DNS zone, global traffic manager, or application configuration system.</p>
+<p>The playground can create Azure DNS records, including MongoDB SRV records, as
+one example. See
+<a href="https://github.com/documentdb/documentdb-kubernetes-operator/blob/main/documentdb-playground/multi-cloud-deployment/README.md#azure-dns-configuration">Azure DNS configuration</a>
+and <a href="https://github.com/documentdb/documentdb-kubernetes-operator/blob/main/documentdb-playground/multi-cloud-deployment/README.md#connect-to-database">Connect to database</a>.</p>
+<h3 id="observability-must-include-the-network-layer">Observability must include the network layer<a class="headerlink" href="#observability-must-include-the-network-layer" title="Permanent link">&para;</a></h3>
+<p>Multi-cloud failures often show up first as networking symptoms: gateway health,
+DNS resolution, route changes, packet loss, or certificate trust issues. In
+addition to monitoring <a href="../overview/#replication-lag">replication lag</a> and
+DocumentDB cluster health, monitor:</p>
+<ul>
+<li>Istio control plane and east-west gateway health.</li>
+<li>VPN or interconnect tunnel status.</li>
+<li>Cross-provider latency and packet loss.</li>
+<li>Provider load balancer health.</li>
+<li>DNS record propagation and client resolution.</li>
+<li>Basic connectivity between database nodes and the application layer.</li>
+<li>Application gateway selection, to avoid unintended cross-cloud latency.</li>
+</ul>
+<p>For a playground observability example, see the
+<a href="https://github.com/documentdb/documentdb-kubernetes-operator/tree/main/documentdb-playground/multi-cloud-deployment/telemetry">multi-cloud telemetry folder</a>.</p>
+<h2 id="when-to-use-the-playground">When to use the playground<a class="headerlink" href="#when-to-use-the-playground" title="Permanent link">&para;</a></h2>
+<p>Use the multi-cloud playground when you want a runnable AKS, GKE, and EKS
+reference deployment. Keep the public docs as the conceptual baseline, and use
+the playground for exact commands, environment variables, templates, and cleanup
+steps:</p>
+<ul>
+<li><a href="https://github.com/documentdb/documentdb-kubernetes-operator/blob/main/documentdb-playground/multi-cloud-deployment/deploy.sh">deploy.sh</a></li>
+<li><a href="https://github.com/documentdb/documentdb-kubernetes-operator/blob/main/documentdb-playground/multi-cloud-deployment/deploy-documentdb.sh">deploy-documentdb.sh</a></li>
+<li><a href="https://github.com/documentdb/documentdb-kubernetes-operator/blob/main/documentdb-playground/multi-cloud-deployment/README.md#failover-operations">Multi-cloud failover operations</a></li>
+<li><a href="https://github.com/documentdb/documentdb-kubernetes-operator/blob/main/documentdb-playground/multi-cloud-deployment/README.md#troubleshooting">Multi-cloud troubleshooting</a></li>
+</ul>
 <h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../metrics/">Metrics Reference</a> - DocumentDB-owned metrics and planned metric groups.</li>
+<li><a href="../failover-procedures/">Multi-region failover procedures</a></li>
+<li><a href="https://github.com/documentdb/documentdb-kubernetes-operator/blob/main/documentdb-playground/multi-cloud-deployment/README.md">Multi-cloud playground</a></li>
 </ul>
 
 
