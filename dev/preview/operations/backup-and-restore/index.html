@@ -923,6 +923,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#version-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version compatibility
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#step-2-create-a-new-documentdb-cluster" class="md-nav__link">
     <span class="md-ellipsis">
       Step 2: Create a New DocumentDB Cluster
@@ -1582,6 +1591,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#version-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version compatibility
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#step-2-create-a-new-documentdb-cluster" class="md-nav__link">
     <span class="md-ellipsis">
       Step 2: Create a New DocumentDB Cluster
@@ -1808,30 +1826,68 @@
 <p>List backups for your DocumentDB cluster and choose one in <code>completed</code> status:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>backups<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 </code></pre></div>
-<h3 id="step-2-create-a-new-documentdb-cluster">Step 2: Create a New DocumentDB Cluster<a class="headerlink" href="#step-2-create-a-new-documentdb-cluster" title="Permanent link">&para;</a></h3>
-<div class="highlight"><span class="filename">restore.yaml</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentdb.io/preview</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DocumentDB</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nt">metadata</span><span class="p">:</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-restored-cluster</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nt">spec</span><span class="p">:</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="nt">nodeCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="nt">instancesPerNode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="nt">resource</span><span class="p">:</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span><span class="nt">storage</span><span class="p">:</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">      </span><span class="nt">pvcSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10Gi</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span><span class="nt">exposeViaService</span><span class="p">:</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span><span class="nt">serviceType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIP</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span><span class="nt">bootstrap</span><span class="p">:</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span><span class="nt">recovery</span><span class="p">:</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">      </span><span class="nt">backup</span><span class="p">:</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-backup</span><span class="w">  </span><span class="c1"># Name of the backup to restore from</span>
+<p>The <code>SchemaVersion</code> column shows the schema version the backup was taken at. You
+need it to choose a compatible version for the restore:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>backup<span class="w"> </span>my-backup<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.schemaVersion}&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>restore.yaml
+<h3 id="version-compatibility">Version compatibility<a class="headerlink" href="#version-compatibility" title="Permanent link">&para;</a></h3>
+<p>A restore brings your data back at the schema version from <strong>when the backup was
+taken</strong>. Set the new cluster's <code>documentDBVersion</code> to <strong>that version or newer</strong> —
+ideally the same version the backup was taken with. Never restore onto an <strong>older</strong>
+version: it runs against a newer, irreversible schema and may cause <strong>data
+corruption</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Restore version vs. backup schema</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>equal or newer</td>
+<td>Allowed</td>
+</tr>
+<tr>
+<td>older</td>
+<td><strong>Rejected</strong> at admission (when the schema version is known)</td>
+</tr>
+<tr>
+<td>schema version unknown</td>
+<td>Allowed with a warning — verify the version yourself</td>
+</tr>
+</tbody>
+</table>
+<p>The schema version is known from the <code>Backup</code>'s <code>status.schemaVersion</code> or a
+retained PV's <code>documentdb.io/schema-version</code> annotation. A PV imported from
+outside the operator (e.g. a raw disk or external snapshot) carries no annotation,
+so its schema version is unknown.</p>
+<h3 id="step-2-create-a-new-documentdb-cluster">Step 2: Create a New DocumentDB Cluster<a class="headerlink" href="#step-2-create-a-new-documentdb-cluster" title="Permanent link">&para;</a></h3>
+<div class="highlight"><span class="filename">restore.yaml</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentdb.io/preview</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DocumentDB</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-restored-cluster</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="nt">nodeCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span><span class="nt">instancesPerNode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span><span class="c1"># Set to the backup&#39;s schema version or newer (see Version compatibility).</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span><span class="nt">documentDBVersion</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0.110.0&quot;</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span><span class="nt">resource</span><span class="p">:</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">    </span><span class="nt">storage</span><span class="p">:</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">      </span><span class="nt">pvcSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10Gi</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span><span class="nt">exposeViaService</span><span class="p">:</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">    </span><span class="nt">serviceType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIP</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">  </span><span class="nt">bootstrap</span><span class="p">:</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">    </span><span class="nt">recovery</span><span class="p">:</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">      </span><span class="nt">backup</span><span class="p">:</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-backup</span><span class="w">  </span><span class="c1"># Name of the backup to restore from</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>restore.yaml
 </code></pre></div>
 <h3 id="step-3-verify-the-restore">Step 3: Verify the Restore<a class="headerlink" href="#step-3-verify-the-restore" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Wait for the DocumentDB cluster to become healthy</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>documentdb<span class="w"> </span>my-restored-cluster<span class="w"> </span>-n<span class="w"> </span>default<span class="w"> </span>-w
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Wait for the DocumentDB cluster to become healthy</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>documentdb<span class="w"> </span>my-restored-cluster<span class="w"> </span>-n<span class="w"> </span>default<span class="w"> </span>-w
 </code></pre></div>
 <p>Once the status shows <code>Cluster in healthy state</code>, connect and verify your data. See <a href="../../configuration/networking/#connect-with-mongosh">Connect with mongosh</a> for connection instructions.</p>
 <h3 id="restore-constraints">Restore Constraints<a class="headerlink" href="#restore-constraints" title="Permanent link">&para;</a></h3>
@@ -1840,6 +1896,7 @@
 <li>The backup must be in <code>completed</code> status.</li>
 <li>The VolumeSnapshot referenced by the backup must still exist — if it was manually deleted, the backup cannot be used for recovery.</li>
 <li>You cannot specify both <code>backup</code> and <code>persistentVolume</code> in the same recovery spec.</li>
+<li>The restore version must be <strong>&gt;= the backup's schema version</strong> when that version is known (from the <code>Backup</code> or a PV's <code>documentdb.io/schema-version</code> annotation); otherwise the restore is allowed with a warning. See <a href="#version-compatibility">Version compatibility</a>.</li>
 </ul>
 <p>For additional recovery options (including PV-based recovery), see <a href="../restore-deleted-cluster/">Restore a Deleted DocumentDB Cluster</a>.</p>
 <h2 id="backup-retention-policy">Backup Retention Policy<a class="headerlink" href="#backup-retention-policy" title="Permanent link">&para;</a></h2>

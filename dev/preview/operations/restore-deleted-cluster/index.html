@@ -1622,6 +1622,16 @@
 </code></pre></div>
 <p>The PV should be in <code>Released</code> or <code>Available</code> status.</p>
 <h3 id="step-2-create-a-new-documentdb-cluster-with-pv-recovery">Step 2: Create a New DocumentDB Cluster with PV Recovery<a class="headerlink" href="#step-2-create-a-new-documentdb-cluster-with-pv-recovery" title="Permanent link">&para;</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Schema-version compatibility</p>
+<p>Set <code>documentDBVersion</code> to the schema version of the data on the PV <strong>or newer</strong> —
+never older, which risks <strong>data corruption</strong>. Retained PVs carry a
+<code>documentdb.io/schema-version</code> annotation; when present, admission rejects a
+restore onto an older version. If the annotation is missing (e.g. a PV imported
+from outside the operator), the version can't be verified and the restore is
+allowed with a warning — set the right version yourself. See
+<a href="../backup-and-restore/#version-compatibility">Version compatibility</a>.</p>
+</div>
 <div class="highlight"><span class="filename">restore-from-pv.yaml</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentdb.io/preview</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DocumentDB</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">metadata</span><span class="p">:</span>
@@ -1630,17 +1640,19 @@
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">spec</span><span class="p">:</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">nodeCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">instancesPerNode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">documentDbCredentialSecret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentdb-credentials</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">resource</span><span class="p">:</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nt">storage</span><span class="p">:</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="nt">pvcSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10Gi</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">      </span><span class="nt">storageClass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;original-storage-class&gt;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="nt">exposeViaService</span><span class="p">:</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="nt">serviceType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIP</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="nt">bootstrap</span><span class="p">:</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span><span class="nt">recovery</span><span class="p">:</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">      </span><span class="nt">persistentVolume</span><span class="p">:</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pvc-abc123-def456-789</span><span class="w">  </span><span class="c1"># The retained PV name</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="c1"># Set to the PV data&#39;s schema version or newer (see Version compatibility).</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">documentDBVersion</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0.110.0&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">documentDbCredentialSecret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentdb-credentials</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="nt">resource</span><span class="p">:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="nt">storage</span><span class="p">:</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">      </span><span class="nt">pvcSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10Gi</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">      </span><span class="nt">storageClass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;original-storage-class&gt;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="nt">exposeViaService</span><span class="p">:</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span><span class="nt">serviceType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIP</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="nt">bootstrap</span><span class="p">:</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">    </span><span class="nt">recovery</span><span class="p">:</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">      </span><span class="nt">persistentVolume</span><span class="p">:</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pvc-abc123-def456-789</span><span class="w">  </span><span class="c1"># The retained PV name</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>restore-from-pv.yaml
 </code></pre></div>
