@@ -44,16 +44,13 @@ func (impl Implementation) GetCapabilities(
 					{
 						Type: lifecycle.OperatorOperationType_TYPE_CREATE,
 					},
-					{
-						Type: lifecycle.OperatorOperationType_TYPE_PATCH,
-					},
 				},
 			},
 		},
 	}, nil
 }
 
-// LifecycleHook is called by CNPG for Pod CREATE/PATCH/UPDATE operations
+// LifecycleHook is called by CNPG for Pod CREATE operations.
 func (impl Implementation) LifecycleHook(
 	ctx context.Context,
 	request *lifecycle.OperatorLifecycleRequest,
@@ -71,8 +68,7 @@ func (impl Implementation) LifecycleHook(
 	switch kind {
 	case "Pod":
 		switch *operation {
-		case lifecycle.OperatorOperationType_TYPE_CREATE, lifecycle.OperatorOperationType_TYPE_PATCH,
-			lifecycle.OperatorOperationType_TYPE_UPDATE:
+		case lifecycle.OperatorOperationType_TYPE_CREATE:
 			return impl.reconcileMetadata(ctx, request)
 		}
 		// add any other custom logic to execute based on the operation
@@ -249,7 +245,7 @@ func (impl Implementation) reconcileMetadata(
 		log.Printf("Injecting OTel Collector sidecar with image: %s", configuration.OtelCollectorImage)
 
 		// Add ConfigMap volume for operator-generated config files (static.yaml + dynamic.yaml)
-		// Check for existing volume to be idempotent across CREATE and PATCH operations
+		// Check for an existing volume so pod construction remains idempotent.
 		otelVolFound := false
 		for _, v := range mutatedPod.Spec.Volumes {
 			if v.Name == "otel-config" {
@@ -270,7 +266,7 @@ func (impl Implementation) reconcileMetadata(
 			})
 		}
 
-		otelSidecar := newOtelCollectorSidecar(configuration.OtelCollectorImage, cluster.Name)
+		otelSidecar := newOtelCollectorSidecar(configuration.OtelCollectorImage)
 		if resources := buildResources(
 			configuration.OTelCPURequest,
 			configuration.OTelCPULimit,
@@ -463,11 +459,9 @@ func gatewayOTelEnvVars() []corev1.EnvVar {
 // container, idempotently. Existing env vars with the same name are preserved
 // (we don't overwrite) and missing ones are appended in declaration order.
 //
-// Idempotency matters: this hook fires on both CREATE and PATCH operations.
-// Without name-based dedup, repeated reconciles would double-append env
-// entries and CNPG's pod metadata reconciler would fail with
-// "Pod is invalid: spec: Forbidden: pod updates may not change fields other
-// than ...".
+// Idempotency keeps pod construction stable if a caller passes an already
+// mutated pod. Container injection itself runs only for CREATE because
+// Kubernetes forbids adding or removing containers from an existing pod.
 func injectGatewayOTelEnv(pod *corev1.Pod) {
 	envs := gatewayOTelEnvVars()
 	for i := range pod.Spec.Containers {
@@ -490,6 +484,7 @@ func injectGatewayOTelEnv(pod *corev1.Pod) {
 // otelCollectorContainerName is the name of the injected OpenTelemetry
 // Collector sidecar.
 const otelCollectorContainerName = "otel-collector"
+const otelMonitorRoleName = "otel_monitor"
 
 // gatewaySecurityContext returns the SecurityContext for the documentdb-gateway
 // sidecar: the shared PSA-restricted hardening plus an explicit UID/GID of
@@ -506,8 +501,8 @@ func gatewaySecurityContext() *corev1.SecurityContext {
 // the caller). It carries the shared PSA-restricted SecurityContext without an
 // explicit UID so the upstream collector image keeps its own baked-in non-root
 // user (UID 10001); PSA "restricted" only requires runAsNonRoot, not a fixed
-// UID. clusterName selects the CNPG-managed "<cluster>-app" credential secret.
-func newOtelCollectorSidecar(image, clusterName string) *corev1.Container {
+// UID.
+func newOtelCollectorSidecar(image string) *corev1.Container {
 	return &corev1.Container{
 		Name:  otelCollectorContainerName,
 		Image: image,
@@ -515,10 +510,9 @@ func newOtelCollectorSidecar(image, clusterName string) *corev1.Container {
 			"--config=file:/config/static.yaml",
 			"--config=file:/config/dynamic.yaml",
 		},
-		// PGUSER and PGPASSWORD are sourced from the CNPG-managed application secret
-		// ("<cluster>-app"). CNPG auto-creates this secret with "username" and "password"
-		// keys for the application database user. The OTel Collector's sqlquery receiver
-		// uses these credentials to connect to PostgreSQL and collect health metrics.
+		// PostgreSQL currently uses trust authentication, so injecting a password
+		// would not enforce access control. Use the dedicated password-disabled
+		// identity directly until database authentication is tightened.
 		Env: []corev1.EnvVar{
 			{
 				Name: "POD_NAME",
@@ -529,26 +523,8 @@ func newOtelCollectorSidecar(image, clusterName string) *corev1.Container {
 				},
 			},
 			{
-				Name: "PGUSER",
-				ValueFrom: &corev1.EnvVarSource{
-					SecretKeyRef: &corev1.SecretKeySelector{
-						LocalObjectReference: corev1.LocalObjectReference{
-							Name: clusterName + "-app",
-						},
-						Key: "username",
-					},
-				},
-			},
-			{
-				Name: "PGPASSWORD",
-				ValueFrom: &corev1.EnvVarSource{
-					SecretKeyRef: &corev1.SecretKeySelector{
-						LocalObjectReference: corev1.LocalObjectReference{
-							Name: clusterName + "-app",
-						},
-						Key: "password",
-					},
-				},
+				Name:  "PGUSER",
+				Value: otelMonitorRoleName,
 			},
 		},
 		VolumeMounts: []corev1.VolumeMount{

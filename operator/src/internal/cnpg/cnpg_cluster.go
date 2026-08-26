@@ -149,6 +149,7 @@ func GetCnpgClusterSpecFromIntent(req ctrl.Request, documentdb *dbpreview.Docume
 			spec.MaxStopDelay = getMaxStopDelayOrDefault(documentdb)
 			applyPostgresProcessIdentity(&spec, intent)
 			applyIOUringSeccomp(&spec, intent)
+			applyOtelMonitorRole(&spec, documentdb)
 
 			return spec
 		}(),
@@ -379,7 +380,49 @@ func applyIOUringSeccomp(spec *cnpgv1.ClusterSpec, intent product.ClusterIntent)
 	}
 }
 
-// buildPostgresConfiguration returns the cnpgv1.PostgresConfiguration block
+// applyOtelMonitorRole declares the PostgreSQL identity used by the OTel
+// Collector sidecar. When monitoring is disabled, the role remains declared
+// with ensure=absent so CNPG removes any role left by an earlier configuration.
+//
+// PostgreSQL host authentication currently uses trust, so a generated password
+// would not be checked. Disable the role password explicitly until authentication
+// is tightened rather than creating an unused credential and widening Secret RBAC.
+func applyOtelMonitorRole(spec *cnpgv1.ClusterSpec, documentdb *dbpreview.DocumentDB) {
+	if documentdb == nil {
+		return
+	}
+	if spec.Managed == nil {
+		spec.Managed = &cnpgv1.ManagedConfiguration{}
+	}
+	role := absentOtelMonitorRole()
+	if documentdb.Spec.Monitoring != nil && documentdb.Spec.Monitoring.Enabled {
+		// The current health query is SELECT 1, so the role needs LOGIN only
+		// and is not granted broad monitoring memberships.
+		role = cnpgv1.RoleConfiguration{
+			Name:            otelcfg.MonitorRoleName,
+			Comment:         "Dedicated role for the OTel Collector monitoring sidecar",
+			Ensure:          cnpgv1.EnsurePresent,
+			Login:           true,
+			DisablePassword: true,
+			// Set the CNPG/CRD-defaulted fields explicitly so the desired role
+			// matches the API-server-defaulted form stored on the live cluster,
+			// keeping SyncCnpgCluster's diff stable (no perpetual re-patching).
+			ConnectionLimit: -1,
+			Inherit:         pointer.Bool(true),
+		}
+	}
+	spec.Managed.Roles = append(spec.Managed.Roles, role)
+}
+
+func absentOtelMonitorRole() cnpgv1.RoleConfiguration {
+	return cnpgv1.RoleConfiguration{
+		Name:            otelcfg.MonitorRoleName,
+		Ensure:          cnpgv1.EnsureAbsent,
+		ConnectionLimit: -1,
+		Inherit:         pointer.Bool(true),
+	}
+}
+
 // for the cluster.
 //
 // The operator declares the DocumentDB extension via CNPG's Extensions
