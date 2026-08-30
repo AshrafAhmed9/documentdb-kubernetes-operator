@@ -204,6 +204,15 @@ var injectedSidecarNames = map[string]bool{
 	"otel-collector":     true,
 }
 
+// CNPG stamps cnpg.io/cluster on its bootstrap/join Job pods as well as on
+// instance pods, but only instance pods get the injected sidecars. Presence
+// checks are therefore scoped by cnpg.io/podRole=instance so a lingering
+// bootstrap Job pod is not mistaken for an instance missing its sidecar.
+const (
+	cnpgPodRoleLabel    = "cnpg.io/podRole"
+	cnpgPodRoleInstance = "instance"
+)
+
 // checkPSARestricted returns an error if ctr lacks any SecurityContext field
 // required by the Kubernetes Pod Security Admission "restricted" profile.
 func checkPSARestricted(podName string, ctr corev1.Container) error {
@@ -242,10 +251,32 @@ func containsCapability(caps []corev1.Capability, want corev1.Capability) bool {
 // restricted-labeled namespace already implies the pods passed admission; the
 // explicit field checks turn an otherwise opaque CNPG pod-creation failure into
 // a precise message. Regression guard for #387 — works for both freshly
-// deployed and restored (recovery) clusters. It errors if no injected sidecar
-// is found so it cannot pass vacuously.
-func AssertInjectedSidecarsPSARestricted(ctx context.Context, c client.Client, ns, clusterName string) func() error {
+// deployed and restored (recovery) clusters.
+//
+// requireSidecars names injected sidecars that must be present on every
+// instance pod. documentdb-gateway is injected unconditionally, so without
+// this a monitoring-on cluster whose otel-collector failed to inject still
+// passes: the gateway alone satisfies the "found at least one sidecar" guard.
+// Callers that enable monitoring should pass "otel-collector" so a silently
+// missing collector fails instead of being reported as hardened. Passing a
+// name that is not an injected sidecar is a spec bug and fails immediately.
+func AssertInjectedSidecarsPSARestricted(
+	ctx context.Context,
+	c client.Client,
+	ns, clusterName string,
+	requireSidecars ...string,
+) func() error {
+	var requireErr error
+	for _, name := range requireSidecars {
+		if !injectedSidecarNames[name] {
+			requireErr = fmt.Errorf("required sidecar %q is not a CNPG-I-injected sidecar", name)
+			break
+		}
+	}
 	return func() error {
+		if requireErr != nil {
+			return requireErr
+		}
 		var pods corev1.PodList
 		if err := c.List(ctx, &pods,
 			client.InNamespace(ns),
@@ -256,20 +287,38 @@ func AssertInjectedSidecarsPSARestricted(ctx context.Context, c client.Client, n
 			return fmt.Errorf("no pods found for cluster %s/%s", ns, clusterName)
 		}
 		matched := 0
+		instancePods := 0
 		for i := range pods.Items {
-			for j := range pods.Items[i].Spec.Containers {
-				ctr := pods.Items[i].Spec.Containers[j]
+			pod := &pods.Items[i]
+			present := make(map[string]bool, len(pod.Spec.Containers))
+			for j := range pod.Spec.Containers {
+				ctr := pod.Spec.Containers[j]
 				if !injectedSidecarNames[ctr.Name] {
 					continue
 				}
+				present[ctr.Name] = true
 				matched++
-				if err := checkPSARestricted(pods.Items[i].Name, ctr); err != nil {
+				if err := checkPSARestricted(pod.Name, ctr); err != nil {
 					return err
+				}
+			}
+			if pod.Labels[cnpgPodRoleLabel] != cnpgPodRoleInstance {
+				continue
+			}
+			instancePods++
+			for _, name := range requireSidecars {
+				if !present[name] {
+					return fmt.Errorf("instance pod %s is missing required injected sidecar %q",
+						pod.Name, name)
 				}
 			}
 		}
 		if matched == 0 {
 			return fmt.Errorf("no injected sidecar containers found on pods for cluster %s/%s", ns, clusterName)
+		}
+		if len(requireSidecars) > 0 && instancePods == 0 {
+			return fmt.Errorf("no instance pods (%s=%s) found for cluster %s/%s to check required sidecars %v",
+				cnpgPodRoleLabel, cnpgPodRoleInstance, ns, clusterName, requireSidecars)
 		}
 		return nil
 	}
